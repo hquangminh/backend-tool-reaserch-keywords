@@ -15,8 +15,8 @@ app.get('/search', async (req, res) => {
 
   try {
     const browser = await puppeteer.launch({
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
     })
     const page = await browser.newPage()
     await page.goto(`https://www.google.com/search?q=${query}`, { waitUntil: 'domcontentloaded' })
