@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: backend-tool-research-keywords
+    env: node
+    plan: free
+    buildCommand: 'npm install'
+    startCommand: 'node server.js'
+    envVars:
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: 'true'
+    buildEnvVars:
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: 'true'
