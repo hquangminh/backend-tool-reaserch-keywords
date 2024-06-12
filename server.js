@@ -1,9 +1,13 @@
 const express = require('express')
 const puppeteer = require('puppeteer')
 const cors = require('cors')
+const path = require('path')
 
 const app = express()
 const port = process.env.PORT || 3001
+
+// Configure Puppeteer cache path
+const PUPPETEER_CACHE_PATH = process.env.PUPPETEER_CACHE_PATH || path.resolve(__dirname, '.cache', 'puppeteer')
 
 app.use(cors())
 
@@ -16,7 +20,7 @@ app.get('/search', async (req, res) => {
   try {
     const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
     })
     const page = await browser.newPage()
     await page.goto(`https://www.google.com/search?q=${query}`, { waitUntil: 'domcontentloaded' })
@@ -42,9 +46,12 @@ app.get('/search', async (req, res) => {
     })
 
     await browser.close()
+
+    // Log the results before sending the response
+    console.log('Search results:', results)
     res.json(results)
   } catch (error) {
-    console.error(error)
+    console.error('Error during search:', error)
     res.status(500).send(`Internal server error: ${error.message}`)
   }
 })
